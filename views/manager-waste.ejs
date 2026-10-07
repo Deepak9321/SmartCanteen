@@ -1,0 +1,67 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Smart Canteen · Waste</title>
+    <link rel="stylesheet" href="/css/app.css">
+</head>
+
+<body>
+    <div class="layout"><%- include('manager-nav',{user,active:'waste'}) %>
+            <main>
+                <header>
+                    <div><small>Manager console</small>
+                        <h1>Food Waste Tracking</h1>
+                    </div><button class="outline" onclick="toggleWaste()">+ Add waste record</button>
+                </header>
+                <section class="panel">
+                    <div id="wasteForm" class="hidden form-grid"><input id="wFood" placeholder="Food name"><input
+                            id="wPrepared" type="number" placeholder="Prepared"><input id="wSold" type="number"
+                            placeholder="Sold"><input id="wUnsold" type="number" placeholder="Unsold"><input id="wKg"
+                            type="number" step="0.1" placeholder="Waste kg"><button class="primary"
+                            onclick="addWaste()">Save record</button></div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Item</th>
+                                <th>Prepared</th>
+                                <th>Sold</th>
+                                <th>Unsold</th>
+                                <th>Waste</th>
+                                <th>Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% waste.forEach(w=>{ %><tr>
+                                    <td>
+                                        <%= w.foodName %>
+                                    </td>
+                                    <td>
+                                        <%= w.prepared %>
+                                    </td>
+                                    <td>
+                                        <%= w.sold %>
+                                    </td>
+                                    <td>
+                                        <%= w.unsold %>
+                                    </td>
+                                    <td>
+                                        <%= w.unsoldKg %> kg
+                                    </td>
+                                    <td>
+                                        <%= new Date(w.date).toLocaleDateString() %>
+                                    </td>
+                                </tr>
+                                <% }) %>
+                        </tbody>
+                    </table>
+                </section>
+            </main>
+    </div>
+    <div id="toast"></div>
+    <script src="/js/manager.js"></script>
+</body>
+
+</html>

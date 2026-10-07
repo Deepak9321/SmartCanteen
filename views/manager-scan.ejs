@@ -1,0 +1,45 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Smart Canteen · Scan QR</title>
+    <link rel="stylesheet" href="/css/app.css">
+</head>
+
+<body>
+    <div class="layout"><%- include('manager-nav',{user,active:'scan'}) %>
+            <main>
+                <header>
+                    <div><small>Manager console</small>
+                        <h1>Scan Student Pickup QR</h1>
+                    </div>
+                </header>
+                <section class="panel">
+                    <div class="panel-head">
+                        <div>
+                            <h3>Verify pickup</h3><small>Scan camera QR or upload the student's QR image.</small>
+                        </div><button class="primary" onclick="startScanner()">Start scanner</button>
+                    </div>
+                    <div class="scanner-layout">
+                        <div>
+                            <div id="qr-reader" class="qr-reader"></div>
+                            <div class="scanner-actions"><button class="outline" onclick="stopScanner()">Stop
+                                    scanner</button><label class="file-scan">Upload QR image<input id="qrFile"
+                                        type="file" accept="image/*" onchange="scanQRImage(this.files[0])"></label>
+                            </div>
+                        </div>
+                        <div id="scanResult" class="scan-result">
+                            <div class="empty">No QR scanned yet.</div>
+                        </div>
+                    </div>
+                </section>
+            </main>
+    </div>
+    <div id="toast"></div>
+    <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+    <script src="/js/manager.js"></script>
+</body>
+
+</html>

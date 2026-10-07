@@ -1,0 +1,52 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Smart Canteen · Manager Dashboard</title>
+    <link rel="stylesheet" href="/css/app.css">
+</head>
+
+<body>
+    <div class="layout"><%- include('manager-nav',{user,active:'dashboard'}) %>
+            <main>
+                <header>
+                    <div><small>Manager dashboard</small>
+                        <h1>Today's overview</h1>
+                    </div><button class="primary" onclick="refreshForecast()">✦ Refresh AI forecast</button>
+                </header>
+                <div class="kpis">
+                    <div><small>Today's orders</small><b>
+                            <%= stats.orders %>
+                        </b><em>Live</em></div>
+                    <div><small>Today's sales</small><b>₹<%= stats.revenue.toLocaleString() %></b><em>Paid orders</em>
+                    </div>
+                    <div><small>Prepared / Sold</small><b>
+                            <%= stats.prepared %> / <%= stats.sold %>
+                        </b><em>servings</em></div>
+                    <div><small>Unsold / waste</small><b>
+                            <%= stats.unsold %> / <%= stats.wasteKg.toFixed(1) %> kg
+                        </b><em>Track</em></div>
+                </div>
+                <section class="hero">
+                    <div><span class="badge purple">Manager control center</span>
+                        <h2>Run the canteen from separate modules.</h2>
+                        <p>Orders, menu, AI demand, waste, sales, QR pickup and every manager module have their own
+                            page.</p>
+                    </div>
+                </section>
+                <section class="panel">
+                    <h3>Quick actions</h3>
+                    <div class="page-nav"><a href="/manager/orders">Order management</a><a href="/manager/menu">Add food
+                            / inventory</a><a href="/manager/forecast">AI demand overview</a><a
+                            href="/manager/waste">Record waste</a><a href="/manager/scan">Scan student QR</a><a
+                            href="/manager/sales">Sales analytics</a></div>
+                </section>
+            </main>
+    </div>
+    <div id="toast"></div>
+    <script src="/js/manager.js"></script>
+</body>
+
+</html>

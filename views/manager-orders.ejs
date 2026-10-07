@@ -1,0 +1,75 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Smart Canteen · Orders</title>
+    <link rel="stylesheet" href="/css/app.css">
+</head>
+
+<body>
+    <div class="layout"><%- include('manager-nav',{user,active:'orders'}) %>
+            <main>
+                <header>
+                    <div><small>Manager console</small>
+                        <h1>Order Management</h1>
+                    </div><a class="primary" href="/manager/scan">📷 Scan QR</a>
+                </header>
+                <section class="panel">
+                    <div class="panel-head">
+                        <div>
+                            <h3>All recent orders</h3><small>Student, items, payment and selected delivery time</small>
+                        </div>
+                    </div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Token</th>
+                                <th>Student</th>
+                                <th>Items</th>
+                                <th>Delivery</th>
+                                <th>Total</th>
+                                <th>Status</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% orders.forEach(o=>{ %><tr>
+                                    <td><b>#<%= o.token %></b></td>
+                                    <td>
+                                        <%= o.studentName %>
+                                    </td>
+                                    <td>
+                                        <%= o.items.map(i=>i.name+' × '+i.quantity).join(', ') %>
+                                    </td>
+                                    <td>
+                                        <%= o.deliveryDate||'Today' %><br><small>
+                                                <%= o.deliveryTime||'ASAP' %>
+                                            </small>
+                                    </td>
+                                    <td>₹<%= o.total %>
+                                    </td>
+                                    <td><span
+                                            class="tag <%= o.status==='Ready'?'green':o.status==='Picked Up'?'purple':'amber' %>">
+                                            <%= o.status %>
+                                        </span></td>
+                                    <td><select onchange="changeStatus('<%= o._id %>',this.value)">
+                                            <option value="">Change</option>
+                                            <option>Preparing</option>
+                                            <option>Ready</option>
+                                            <option>Picked Up</option>
+                                            <option>Cancelled</option>
+                                        </select></td>
+                                </tr>
+                                <% }) %>
+                        </tbody>
+                    </table>
+                </section>
+            </main>
+    </div>
+    <div id="toast"></div>
+    <script src="/js/manager.js"></script>
+</body>
+
+</html>

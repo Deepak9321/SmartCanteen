@@ -1,0 +1,48 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Smart Canteen · Menu</title>
+    <link rel="stylesheet" href="/css/app.css">
+</head>
+
+<body>
+    <div class="layout"><%- include('manager-nav',{user,active:'menu'}) %>
+            <main>
+                <header>
+                    <div><small>Manager console</small>
+                        <h1>Menu & Inventory</h1>
+                    </div>
+                </header>
+                <section class="panel">
+                    <div class="panel-head">
+                        <div>
+                            <h3>Food items</h3><small>Update stock and availability</small>
+                        </div>
+                    </div>
+                    <div class="inventory-grid">
+                        <% foods.forEach(f=>{ %><div class="inventory-card">
+                                <div class="food-img small"><img src="<%= foodImagePath(f.name) %>"
+                                        alt="<%= f.name %>" onerror="this.onerror=null;this.src='/images/food/default.svg';"><span class="food-emoji">
+                                        <%= f.emoji %>
+                                    </span></div><b>
+                                    <%= f.name %>
+                                </b><small>
+                                    <%= f.category %> · ₹<%= f.price %>
+                                </small><label>Stock<input type="number" value="<%= f.stock %>"
+                                        id="stock-<%= f._id %>"></label><button class="outline"
+                                    onclick="saveFood('<%= f._id %>','<%= f.name %>',<%= f.price %>,'<%= f.category %>',document.getElementById('stock-<%= f._id %>').value)">Save
+                                    stock</button>
+                            </div>
+                            <% }) %>
+                    </div>
+                </section>
+            </main>
+    </div>
+    <div id="toast"></div>
+    <script src="/js/manager.js"></script>
+</body>
+
+</html>

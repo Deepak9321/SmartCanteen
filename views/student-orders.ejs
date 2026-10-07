@@ -1,0 +1,64 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Smart Canteen · Orders</title>
+    <link rel="stylesheet" href="/css/app.css">
+</head>
+
+<body>
+    <div class="layout"><%- include('student-nav',{user,active:'orders'}) %>
+            <main>
+                <header>
+                    <div><small>Student portal</small>
+                        <h1>My Orders</h1>
+                    </div><a class="primary" href="/student/menu">+ New order</a>
+                </header>
+                <section class="panel">
+                    <div class="panel-head">
+                        <div>
+                            <h3>Order history</h3><small>Payment, QR pickup and delivery slots</small>
+                        </div>
+                    </div>
+                    <div class="order-list">
+                        <% if(!orders.length){ %>
+                            <div class="empty">No orders yet.</div>
+                            <% } %>
+                                <% orders.forEach(o=>{ %><article class="order-row">
+                                        <div class="token">#<%= o.token %>
+                                        </div>
+                                        <div class="order-main"><b>Order <%= o._id.toString().slice(-6).toUpperCase() %>
+                                                    </b><small>
+                                                <%= o.items.map(i=>i.name+' × '+i.quantity).join(', ') %>
+                                            </small><span
+                                                class="tag <%= o.status==='Ready'?'green':o.status==='Picked Up'?'purple':'amber' %>">
+                                                <%= o.status %>
+                                            </span><small>🕒 Delivery/Pickup: <%= o.deliveryDate||'Today' %> · <%=
+                                                        o.deliveryTime||'ASAP' %></small></div><strong>₹<%= o.total %>
+                                                </strong>
+                                        <% if(o.qrData){ %><button class="outline"
+                                                onclick="showQR('<%= o.qrData %>','Token <%= o.token %>')">Show
+                                                QR</button>
+                                            <% } else if(o.status==='Pending Payment' ){ %><button class="primary small"
+                                                    onclick="payOrder('<%= o._id %>')">Payment</button>
+                                                <% } %>
+                                    </article>
+                                    <% }) %>
+                    </div>
+                </section>
+            </main>
+    </div>
+    <div id="qrModal" class="modal hidden">
+        <div class="modal-card"><button class="close" onclick="hideQR()">×</button>
+            <h3>Pickup QR</h3>
+            <p id="qrTitle"></p><img id="qrImage">
+            <p class="muted">Show this QR at the canteen counter.</p>
+        </div>
+    </div>
+    <div id="toast"></div>
+    <script src="/js/student.js"></script>
+</body>
+
+</html>

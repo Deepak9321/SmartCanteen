@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Smart Canteen · Home</title>
+    <link rel="stylesheet" href="/css/app.css">
+</head>
+
+<body>
+    <div class="layout">
+        <%- include('student-nav', { user, active: 'home' }) %>
+
+        <main>
+            <header>
+                <div>
+                    <small>Student portal</small>
+                    <h1>Good evening, <%= user.name.split(' ')[0] %> 👋</h1>
+                </div>
+                <a class="primary" href="/student/menu">Order food →</a>
+            </header>
+
+            <section class="hero">
+                <div>
+                    <span class="badge">● Canteen open</span>
+                    <h2>Order smart. Waste less.</h2>
+                    <p>Browse food, choose a delivery slot, pay digitally and use your pickup QR.</p>
+                </div>
+                <div class="hero-stat">
+                    <small>AI tip</small>
+                    <b>Personalized suggestions</b>
+                    <span>Based on your history and popular campus items</span>
+                </div>
+            </section>
+
+            <section class="panel">
+                <div class="panel-head">
+                    <div>
+                        <h3>✦ Recommended for you</h3>
+                        <small>Optional AI suggestions</small>
+                    </div>
+                </div>
+
+                <div class="rec-grid">
+                    <% if (!recommendations.length) { %>
+                        <div class="empty">No recommendations yet. Visit the menu to explore food.</div>
+                    <% } %>
+
+                    <% recommendations.forEach((food) => { %>
+                        <article class="mini-food">
+                            <div class="mini-food-img">
+                                <img src="<%= foodImagePath(food.name) %>" alt="<%= food.name %>" onerror="this.onerror=null;this.src='/images/food/default.svg';">
+                            </div>
+                            <div>
+                                <b><%= food.name %></b>
+                                <small>₹<%= food.price %> · <%= food.category %></small>
+                            </div>
+                            <a class="outline" href="/student/menu">View</a>
+                        </article>
+                    <% }) %>
+                </div>
+            </section>
+
+            <section class="two">
+                <section class="panel">
+                    <h3>Recent orders</h3>
+
+                    <% if (!orders.length) { %>
+                        <div class="empty">No orders yet.</div>
+                    <% } %>
+
+                    <% orders.slice(0, 4).forEach((order) => { %>
+                        <div class="order-row">
+                            <div class="token">#<%= order.token %></div>
+                            <div class="order-main">
+                                <b><%= order.items.map((item) => item.name).join(', ') %></b>
+                                <small>₹<%= order.total %> · <%= order.status %></small>
+                                <small>🕒 <%= order.deliveryDate || 'Today' %> · <%= order.deliveryTime || 'ASAP' %></small>
+                            </div>
+                        </div>
+                    <% }) %>
+                </section>
+
+                <section class="panel">
+                    <h3>Quick links</h3>
+                    <div class="page-nav">
+                        <a href="/student/menu">☷ Menu</a>
+                        <a href="/student/cart">🛒 Cart</a>
+                        <a href="/student/orders">◷ My Orders</a>
+                        <a href="/student/feedback">♥ Order Feedback</a>
+                    </div>
+                </section>
+            </section>
+        </main>
+    </div>
+</body>
+
+</html>

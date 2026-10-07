@@ -1,0 +1,17 @@
+<aside>
+    <div class="brand"><b>SC</b>
+        <div><strong>Smart Canteen</strong><small>Manager Console</small></div>
+    </div>
+    <nav class="manager-tabs">
+        <div class="nav-section-label">MANAGER TABS</div><a class="<%= active==='dashboard'?'active':'' %>"
+            href="/manager/dashboard">▣ Dashboard</a><a class="<%= active==='orders'?'active':'' %>"
+            href="/manager/orders">◷ Order Management</a><a class="<%= active==='menu'?'active':'' %>"
+            href="/manager/menu">☷ Menu & Inventory</a><a class="<%= active==='forecast'?'active':'' %>"
+            href="/manager/forecast">✦ AI Demand</a><a class="<%= active==='waste'?'active':'' %>"
+            href="/manager/waste">◒ Food Waste</a><a class="<%= active==='sales'?'active':'' %>" href="/manager/sales">▤
+            Sales Analytics</a><a class="<%= active==='scan'?'active':'' %>" href="/manager/scan">📷 Scan QR</a>
+    </nav>
+    <div class="aside-bottom"><b>
+            <%= user?.name || 'Manager' %>
+        </b><small>Manager</small><a href="/student/home">← Student view</a><a href="/logout">↪ Logout</a></div>
+</aside>

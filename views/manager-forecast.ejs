@@ -1,0 +1,54 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Smart Canteen · AI Demand</title>
+    <link rel="stylesheet" href="/css/app.css">
+</head>
+
+<body>
+    <div class="layout"><%- include('manager-nav',{user,active:'forecast'}) %>
+            <main>
+                <header>
+                    <div><small>Manager console</small>
+                        <h1>AI Demand Overview</h1>
+                    </div><button class="primary" onclick="refreshForecast()">Refresh forecast</button>
+                </header>
+                <section class="hero">
+                    <div><span class="badge purple">✦ AI demand</span>
+                        <h2>Item-wise preparation plan</h2>
+                        <p>Historical sales + recent demand provide a planning recommendation. Manager makes the final
+                            decision.</p>
+                    </div>
+                </section>
+                <section class="panel">
+                    <div class="forecast">
+                        <div class="frow head"><span>Item</span><span>7-day
+                                avg</span><span>Predicted</span><span>Prepare</span><span>Trend</span></div>
+                        <% forecast.forEach(f=>{const
+                            avg=(f.salesHistory||[]).length?Math.round(f.salesHistory.reduce((a,b)=>a+b,0)/f.salesHistory.length):0;%>
+                            <div class="frow"><span>
+                                    <%= f.emoji %>
+                                        <%= f.name %>
+                                </span><b>
+                                    <%= avg %>
+                                </b><strong>
+                                    <%= f.predicted %>
+                                </strong><strong>
+                                    <%= f.prepare %>
+                                </strong><span
+                                    class="tag <%= f.trend==='Rising'?'green':f.trend==='Falling'?'amber':'purple' %>">
+                                    <%= f.trend %>
+                                </span></div>
+                            <% }) %>
+                    </div>
+                </section>
+            </main>
+    </div>
+    <div id="toast"></div>
+    <script src="/js/manager.js"></script>
+</body>
+
+</html>

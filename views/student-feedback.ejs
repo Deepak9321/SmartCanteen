@@ -1,0 +1,67 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Smart Canteen · Order Feedback</title>
+    <link rel="stylesheet" href="/css/app.css">
+</head>
+
+<body>
+    <div class="layout"><%- include('student-nav',{user,active:'feedback'}) %>
+            <main>
+                <header>
+                    <div><small>Student portal</small>
+                        <h1>Order Feedback</h1>
+                    </div>
+                </header>
+                <section class="panel">
+                    <div class="panel-head">
+                        <div>
+                            <h3>Rate your complete order</h3><small>This is general order and service feedback for your
+                                completed order.</small>
+                        </div>
+                    </div>
+                    <div class="feedback-form"><select id="fbOrder">
+                            <option value="">Select picked-up order</option>
+                            <% orders.filter(o=>o.status==='Picked Up').forEach(o=>{ %><option value="<%= o._id %>">
+                                    Token #<%= o.token %> · ₹<%= o.total %>
+                                </option>
+                                <% }) %>
+                        </select><select id="fbRating">
+                            <option value="5">★★★★★</option>
+                            <option value="4">★★★★☆</option>
+                            <option value="3">★★★☆☆</option>
+                            <option value="2">★★☆☆☆</option>
+                            <option value="1">★☆☆☆☆</option>
+                        </select><input id="fbComment" placeholder="How was the overall experience?"><button
+                            class="primary" onclick="sendFeedback()">Submit feedback</button></div>
+                </section>
+                <section class="panel">
+                    <h3>My order feedback</h3>
+                    <div class="review-grid">
+                        <% feedbacks.forEach(f=>{ %><article class="review-card">
+                                <div class="rating-stars">
+                                    <%= '★' .repeat(f.rating) %>
+                                        <%= '☆' .repeat(5-f.rating) %>
+                                </div>
+                                <p>
+                                    <%= f.comment||'No comment' %>
+                                </p><small>
+                                    <%= new Date(f.createdAt).toLocaleDateString() %>
+                                </small>
+                            </article>
+                            <% }) %>
+                    </div>
+                    <% if(!feedbacks.length){ %>
+                        <div class="empty">No order feedback submitted yet.</div>
+                        <% } %>
+                </section>
+            </main>
+    </div>
+    <div id="toast"></div>
+    <script src="/js/student.js"></script>
+</body>
+
+</html>

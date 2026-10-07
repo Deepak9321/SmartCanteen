@@ -1,0 +1,1068 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Smart Canteen · Create Account</title>
+
+    <link rel="stylesheet" href="/css/app.css">
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body.register-page {
+            margin: 0;
+            min-height: 100vh;
+            font-family: Inter, Arial, sans-serif;
+            background:
+                radial-gradient(circle at 10% 20%, rgba(16, 185, 129, .18), transparent 30%),
+                radial-gradient(circle at 90% 80%, rgba(59, 130, 246, .12), transparent 30%),
+                linear-gradient(135deg, #f0fdf9, #f8fafc 55%, #ecfdf5);
+            overflow-x: hidden;
+        }
+
+        .register-shell {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 35px;
+            position: relative;
+        }
+
+        /* Floating background shapes */
+
+        .bubble {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(1px);
+            pointer-events: none;
+            animation: floatBubble 7s ease-in-out infinite;
+        }
+
+        .bubble.one {
+            width: 90px;
+            height: 90px;
+            background: rgba(16, 185, 129, .12);
+            top: 8%;
+            left: 8%;
+        }
+
+        .bubble.two {
+            width: 140px;
+            height: 140px;
+            background: rgba(59, 130, 246, .08);
+            right: 8%;
+            bottom: 8%;
+            animation-delay: 1.5s;
+        }
+
+        @keyframes floatBubble {
+
+            0%,
+            100% {
+                transform: translateY(0) scale(1);
+            }
+
+            50% {
+                transform: translateY(-20px) scale(1.05);
+            }
+        }
+
+        /* Main card */
+
+        .register-container {
+            width: min(1050px, 100%);
+            min-height: 650px;
+            display: grid;
+            grid-template-columns: 43% 57%;
+            background: rgba(255, 255, 255, .82);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, .9);
+            border-radius: 32px;
+            overflow: hidden;
+            box-shadow:
+                0 30px 80px rgba(15, 23, 42, .15),
+                0 10px 30px rgba(16, 185, 129, .08);
+            animation: cardIn .7s ease both;
+        }
+
+        @keyframes cardIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px) scale(.97);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        /* Left panel */
+
+        .register-visual {
+            position: relative;
+            overflow: hidden;
+            padding: 45px;
+            color: white;
+            background:
+                radial-gradient(circle at 75% 20%, rgba(255, 255, 255, .18), transparent 25%),
+                linear-gradient(145deg, #064e3b, #047857 55%, #059669);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .register-visual::before {
+            content: "";
+            position: absolute;
+            width: 300px;
+            height: 300px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, .06);
+            top: -100px;
+            right: -100px;
+        }
+
+        .register-visual::after {
+            content: "";
+            position: absolute;
+            width: 220px;
+            height: 220px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, .05);
+            bottom: -100px;
+            left: -70px;
+        }
+
+        .brand {
+            position: relative;
+            z-index: 2;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .brand-logo {
+            width: 54px;
+            height: 54px;
+            display: grid;
+            place-items: center;
+            border-radius: 17px;
+            background: rgba(255, 255, 255, .16);
+            border: 1px solid rgba(255, 255, 255, .25);
+            font-size: 20px;
+            font-weight: 900;
+            backdrop-filter: blur(10px);
+        }
+
+        .brand strong {
+            font-size: 19px;
+        }
+
+        .brand small {
+            display: block;
+            margin-top: 3px;
+            opacity: .7;
+        }
+
+        .visual-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .visual-content .eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            padding: 8px 12px;
+            border-radius: 100px;
+            background: rgba(255, 255, 255, .12);
+            border: 1px solid rgba(255, 255, 255, .18);
+            font-size: 12px;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+
+        .visual-content h1 {
+            margin: 0;
+            font-size: clamp(34px, 4vw, 50px);
+            line-height: 1.02;
+            letter-spacing: -2px;
+        }
+
+        .visual-content h1 span {
+            color: #a7f3d0;
+        }
+
+        .visual-content p {
+            color: rgba(255, 255, 255, .76);
+            line-height: 1.7;
+            max-width: 360px;
+            margin: 18px 0 25px;
+        }
+
+        .features {
+            display: grid;
+            gap: 11px;
+        }
+
+        .feature {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 13px;
+            color: rgba(255, 255, 255, .88);
+        }
+
+        .feature-icon {
+            width: 30px;
+            height: 30px;
+            display: grid;
+            place-items: center;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, .12);
+        }
+
+        /* Floating food */
+
+        .food-orbit {
+            position: absolute;
+            right: 25px;
+            top: 38%;
+            width: 125px;
+            height: 125px;
+            z-index: 2;
+            animation: foodFloat 4s ease-in-out infinite;
+        }
+
+        .food-main {
+            width: 100%;
+            height: 100%;
+            display: grid;
+            place-items: center;
+            border-radius: 38px;
+            background: rgba(255, 255, 255, .14);
+            border: 1px solid rgba(255, 255, 255, .2);
+            backdrop-filter: blur(12px);
+            font-size: 65px;
+            box-shadow: 0 20px 45px rgba(0, 0, 0, .16);
+            transform: rotate(-8deg);
+        }
+
+        .food-mini {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            display: grid;
+            place-items: center;
+            border-radius: 14px;
+            background: white;
+            color: #064e3b;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, .15);
+            font-size: 20px;
+        }
+
+        .food-mini.one {
+            right: -15px;
+            top: -12px;
+        }
+
+        .food-mini.two {
+            left: -18px;
+            bottom: -10px;
+        }
+
+        @keyframes foodFloat {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-13px);
+            }
+        }
+
+        /* Right form */
+
+        .register-form-area {
+            padding: 45px 55px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .form-header {
+            margin-bottom: 27px;
+        }
+
+        .form-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            padding: 8px 12px;
+            border-radius: 100px;
+            background: #ecfdf5;
+            color: #047857;
+            font-size: 12px;
+            font-weight: 800;
+            margin-bottom: 14px;
+        }
+
+        .form-header h2 {
+            margin: 0;
+            color: #0f172a;
+            font-size: 32px;
+            letter-spacing: -1px;
+        }
+
+        .form-header p {
+            color: #64748b;
+            margin: 9px 0 0;
+            line-height: 1.6;
+            font-size: 14px;
+        }
+
+        .alert {
+            padding: 12px 14px;
+            border-radius: 12px;
+            margin-bottom: 18px;
+            background: #fef2f2;
+            border: 1px solid #fecaca;
+            color: #b91c1c;
+            font-size: 13px;
+        }
+
+        .register-form {
+            display: grid;
+            gap: 17px;
+        }
+
+        .field-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .field {
+            position: relative;
+        }
+
+        .field label {
+            display: block;
+            margin-bottom: 7px;
+            color: #334155;
+            font-size: 12px;
+            font-weight: 800;
+        }
+
+        .input-wrap {
+            position: relative;
+        }
+
+        .input-icon {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 17px;
+            opacity: .65;
+            pointer-events: none;
+        }
+
+        .field input {
+            width: 100%;
+            height: 50px;
+            border: 1px solid #dbe4ea;
+            border-radius: 14px;
+            padding: 0 14px 0 43px;
+            outline: none;
+            background: rgba(248, 250, 252, .85);
+            color: #0f172a;
+            font-size: 14px;
+            transition: .25s ease;
+        }
+
+        .field input:focus {
+            border-color: #10b981;
+            background: white;
+            box-shadow: 0 0 0 4px rgba(16, 185, 129, .11);
+            transform: translateY(-1px);
+        }
+
+        .field input::placeholder {
+            color: #94a3b8;
+        }
+
+        .password-toggle {
+            position: absolute;
+            right: 9px;
+            top: 50%;
+            transform: translateY(-50%);
+            border: 0;
+            background: transparent;
+            cursor: pointer;
+            font-size: 16px;
+            opacity: .65;
+            padding: 7px;
+        }
+
+        .password-toggle:hover {
+            opacity: 1;
+        }
+
+        .password-strength {
+            height: 4px;
+            margin-top: 7px;
+            border-radius: 20px;
+            background: #e2e8f0;
+            overflow: hidden;
+        }
+
+        .strength-bar {
+            width: 0;
+            height: 100%;
+            border-radius: inherit;
+            transition: .3s ease;
+        }
+
+        .strength-text {
+            margin-top: 5px;
+            color: #94a3b8;
+            font-size: 11px;
+        }
+
+        .terms {
+            color: #64748b;
+            font-size: 11px;
+            line-height: 1.5;
+        }
+
+        .create-btn {
+            width: 100%;
+            height: 52px;
+            border: 0;
+            border-radius: 15px;
+            cursor: pointer;
+            color: white;
+            font-size: 15px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #059669, #10b981);
+            box-shadow: 0 12px 25px rgba(5, 150, 105, .22);
+            transition: .25s ease;
+        }
+
+        .create-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 17px 32px rgba(5, 150, 105, .28);
+        }
+
+        .create-btn:active {
+            transform: translateY(0);
+        }
+
+        .login-link {
+            text-align: center;
+            margin-top: 18px;
+            padding-top: 18px;
+            border-top: 1px solid #e2e8f0;
+            color: #64748b;
+            font-size: 13px;
+        }
+
+        .login-link a {
+            color: #047857;
+            font-weight: 800;
+            text-decoration: none;
+        }
+
+        .login-link a:hover {
+            text-decoration: underline;
+        }
+
+        .manager-link {
+            text-align: center;
+            margin-top: 12px;
+            font-size: 11px;
+            color: #94a3b8;
+        }
+
+        .manager-link a {
+            color: #475569;
+            font-weight: 700;
+            text-decoration: none;
+        }
+
+        /* Responsive */
+
+        @media (max-width: 850px) {
+            .register-container {
+                grid-template-columns: 1fr;
+                max-width: 600px;
+            }
+
+            .register-visual {
+                min-height: 300px;
+                padding: 30px;
+            }
+
+            .food-orbit {
+                right: 35px;
+                top: 30%;
+                transform: scale(.8);
+            }
+
+            .visual-content {
+                max-width: 65%;
+            }
+
+            .register-form-area {
+                padding: 35px 30px;
+            }
+        }
+
+        @media (max-width: 560px) {
+            .register-shell {
+                padding: 15px;
+            }
+
+            .register-container {
+                border-radius: 22px;
+            }
+
+            .register-visual {
+                min-height: 260px;
+            }
+
+            .visual-content {
+                max-width: 100%;
+            }
+
+            .visual-content h1 {
+                font-size: 34px;
+            }
+
+            .food-orbit {
+                display: none;
+            }
+
+            .register-form-area {
+                padding: 28px 20px;
+            }
+
+            .field-row {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+
+            *,
+            *::before,
+            *::after {
+                animation: none !important;
+                transition: none !important;
+            }
+        }
+    </style>
+</head>
+
+<body class="register-page">
+
+    <div class="bubble one"></div>
+    <div class="bubble two"></div>
+
+    <main class="register-shell">
+
+        <section class="register-container">
+
+            <!-- LEFT VISUAL PANEL -->
+
+            <aside class="register-visual">
+
+                <div class="brand">
+                    <div class="brand-logo">SC</div>
+
+                    <div>
+                        <strong>Smart Canteen</strong>
+                        <small>Order smart. Waste less.</small>
+                    </div>
+                </div>
+
+                <div class="visual-content">
+
+                    <div class="eyebrow">
+                        🎓 Student Portal
+                    </div>
+
+                    <h1>
+                        Your food,<br>
+                        <span>your way.</span>
+                    </h1>
+
+                    <p>
+                        Create your student account and enjoy faster
+                        ordering, digital payments and easy pickup.
+                    </p>
+
+                    <div class="features">
+
+                        <div class="feature">
+                            <span class="feature-icon">🍔</span>
+                            <span>Order your favourite food quickly</span>
+                        </div>
+
+                        <div class="feature">
+                            <span class="feature-icon">⚡</span>
+                            <span>Skip long canteen queues</span>
+                        </div>
+
+                        <div class="feature">
+                            <span class="feature-icon">📱</span>
+                            <span>Get a QR pickup token</span>
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div style="position:relative;z-index:2;font-size:11px;opacity:.55;">
+                    Smart Canteen • Student Experience
+                </div>
+
+                <!-- Floating food -->
+
+                <div class="food-orbit">
+
+                    <div class="food-main">
+                        🍱
+                    </div>
+
+                    <div class="food-mini one">
+                        🥤
+                    </div>
+
+                    <div class="food-mini two">
+                        🍟
+                    </div>
+
+                </div>
+
+            </aside>
+
+
+            <!-- RIGHT FORM -->
+
+            <section class="register-form-area">
+
+                <div class="form-header">
+
+                    <div class="form-badge">
+                        ✨ Create Student Account
+                    </div>
+
+                    <h2>Let's get started</h2>
+
+                    <p>
+                        Create your account once and use it for
+                        all your Smart Canteen orders.
+                    </p>
+
+                </div>
+
+
+                <% if (error) { %>
+
+                    <div class="alert">
+                        ⚠️ <%= error %>
+                    </div>
+
+                <% } %>
+
+
+                <form
+                    method="post"
+                    action="/register"
+                    class="register-form"
+                    id="registerForm"
+                >
+
+                    <!-- NAME + STUDENT ID -->
+
+                    <div class="field-row">
+
+                        <div class="field">
+
+                            <label for="name">
+                                Full Name
+                            </label>
+
+                            <div class="input-wrap">
+
+                                <span class="input-icon">👤</span>
+
+                                <input
+                                    id="name"
+                                    name="name"
+                                    type="text"
+                                    placeholder="Your full name"
+                                    value="<%= values.name || '' %>"
+                                    autocomplete="name"
+                                    required
+                                >
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="field">
+
+                            <label for="studentId">
+                                Student ID
+                            </label>
+
+                            <div class="input-wrap">
+
+                                <span class="input-icon">🎓</span>
+
+                                <input
+                                    id="studentId"
+                                    name="studentId"
+                                    type="text"
+                                    placeholder="STU1001"
+                                    value="<%= values.studentId || '' %>"
+                                    required
+                                >
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- EMAIL -->
+
+                    <div class="field">
+
+                        <label for="email">
+                            College Email
+                        </label>
+
+                        <div class="input-wrap">
+
+                            <span class="input-icon">✉️</span>
+
+                            <input
+                                id="email"
+                                name="email"
+                                type="email"
+                                placeholder="student@example.com"
+                                value="<%= values.email || '' %>"
+                                autocomplete="email"
+                                required
+                            >
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- PASSWORD -->
+
+                    <div class="field">
+
+                        <label for="password">
+                            Password
+                        </label>
+
+                        <div class="input-wrap">
+
+                            <span class="input-icon">🔒</span>
+
+                            <input
+                                id="password"
+                                name="password"
+                                type="password"
+                                placeholder="Minimum 6 characters"
+                                autocomplete="new-password"
+                                minlength="6"
+                                required
+                            >
+
+                            <button
+                                type="button"
+                                class="password-toggle"
+                                onclick="togglePassword('password', this)"
+                                aria-label="Show password"
+                            >
+                                👁️
+                            </button>
+
+                        </div>
+
+                        <div class="password-strength">
+                            <div
+                                id="strengthBar"
+                                class="strength-bar"
+                            ></div>
+                        </div>
+
+                        <div
+                            id="strengthText"
+                            class="strength-text"
+                        >
+                            Use 6+ characters
+                        </div>
+
+                    </div>
+
+
+                    <!-- CONFIRM PASSWORD -->
+
+                    <div class="field">
+
+                        <label for="confirmPassword">
+                            Confirm Password
+                        </label>
+
+                        <div class="input-wrap">
+
+                            <span class="input-icon">🔐</span>
+
+                            <input
+                                id="confirmPassword"
+                                name="confirmPassword"
+                                type="password"
+                                placeholder="Re-enter your password"
+                                autocomplete="new-password"
+                                minlength="6"
+                                required
+                            >
+
+                            <button
+                                type="button"
+                                class="password-toggle"
+                                onclick="togglePassword('confirmPassword', this)"
+                                aria-label="Show password"
+                            >
+                                👁️
+                            </button>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="terms">
+                        By creating an account, you agree to use Smart
+                        Canteen responsibly for campus food ordering.
+                    </div>
+
+
+                    <button
+                        type="submit"
+                        class="create-btn"
+                    >
+                        Create Student Account →
+                    </button>
+
+                </form>
+
+
+                <!-- LOGIN -->
+
+                <div class="login-link">
+
+                    Already have an account?
+
+                    <a href="/login">
+                        Login as Student
+                    </a>
+
+                </div>
+
+
+                <!-- MANAGER -->
+
+                <div class="manager-link">
+
+                    Canteen Manager?
+
+                    <a href="/manager/login">
+                        Manager Login →
+                    </a>
+
+                </div>
+
+            </section>
+
+        </section>
+
+    </main>
+
+
+    <script>
+
+        // Password show / hide
+
+        function togglePassword(inputId, button) {
+
+            const input = document.getElementById(inputId);
+
+            if (input.type === "password") {
+
+                input.type = "text";
+
+                button.textContent = "🙈";
+
+            } else {
+
+                input.type = "password";
+
+                button.textContent = "👁️";
+
+            }
+        }
+
+
+        // Password strength
+
+        const passwordInput =
+            document.getElementById("password");
+
+        const strengthBar =
+            document.getElementById("strengthBar");
+
+        const strengthText =
+            document.getElementById("strengthText");
+
+
+        passwordInput.addEventListener("input", function () {
+
+            const password = this.value;
+
+            let score = 0;
+
+            if (password.length >= 6) score++;
+
+            if (password.length >= 8) score++;
+
+            if (/[A-Z]/.test(password)) score++;
+
+            if (/[0-9]/.test(password)) score++;
+
+            if (/[^A-Za-z0-9]/.test(password)) score++;
+
+
+            const levels = [
+                {
+                    width: "0%",
+                    text: "Use 6+ characters"
+                },
+                {
+                    width: "25%",
+                    text: "Weak password"
+                },
+                {
+                    width: "50%",
+                    text: "Fair password"
+                },
+                {
+                    width: "75%",
+                    text: "Good password"
+                },
+                {
+                    width: "100%",
+                    text: "Strong password"
+                }
+            ];
+
+
+            const level =
+                Math.min(score, 4);
+
+            strengthBar.style.width =
+                levels[level].width;
+
+            strengthText.textContent =
+                levels[level].text;
+
+
+            if (level <= 1) {
+
+                strengthBar.style.background =
+                    "#ef4444";
+
+            } else if (level === 2) {
+
+                strengthBar.style.background =
+                    "#f59e0b";
+
+            } else if (level === 3) {
+
+                strengthBar.style.background =
+                    "#10b981";
+
+            } else {
+
+                strengthBar.style.background =
+                    "#059669";
+
+            }
+
+        });
+
+
+        // Confirm password validation
+
+        const form =
+            document.getElementById("registerForm");
+
+        const confirmPassword =
+            document.getElementById("confirmPassword");
+
+
+        form.addEventListener("submit", function (event) {
+
+            const password =
+                passwordInput.value;
+
+            const confirm =
+                confirmPassword.value;
+
+
+            if (password !== confirm) {
+
+                event.preventDefault();
+
+                confirmPassword.focus();
+
+                confirmPassword.style.borderColor =
+                    "#ef4444";
+
+                alert("Passwords do not match.");
+
+                return;
+
+            }
+
+
+            confirmPassword.style.borderColor =
+                "#10b981";
+
+        });
+
+    </script>
+
+</body>
+
+</html>

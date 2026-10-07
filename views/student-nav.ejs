@@ -1,0 +1,16 @@
+<aside>
+    <div class="brand"><b>SC</b>
+        <div><strong>Smart Canteen</strong><small>Student Portal</small></div>
+    </div>
+    <nav><a class="<%= active==='home'?'active':'' %>" href="/student/home">⌂ Home</a><a
+            class="<%= active==='menu'?'active':'' %>" href="/student/menu">☷ Menu</a><a
+            class="<%= active==='cart'?'active':'' %>" href="/student/cart">🛒 Cart <span class="nav-count"
+                id="navCartCount"></span></a><a class="<%= active==='orders'?'active':'' %>" href="/student/orders">◷ My
+            Orders</a><a class="<%= active==='feedback'?'active':'' %>" href="/student/feedback">♥ Order Feedback</a>
+    </nav>
+    <div class="aside-bottom"><b>
+            <%= user.name %>
+        </b><small>
+            <%= user.studentId || 'Student' %>
+        </small><a href="/manager/login">Canteen Manager</a><a href="/logout">↪ Logout</a></div>
+</aside>

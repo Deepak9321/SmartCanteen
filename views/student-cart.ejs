@@ -1,0 +1,79 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Smart Canteen · Cart</title>
+    <link rel="stylesheet" href="/css/app.css">
+</head>
+
+<body>
+    <div class="layout"><%- include('student-nav',{user,active:'cart'}) %>
+            <main class="cart-page">
+                <header>
+                    <div><small>Student portal</small>
+                        <h1>My Cart</h1>
+                    </div><a class="outline" href="/student/menu">← Continue shopping</a>
+                </header>
+                <section id="cartEmpty" class="cart-empty">
+                    <div class="cart-empty-icon">🛒</div>
+                    <h2>Your cart is empty!</h2>
+                    <p>Add your favourite food items and they will appear here.</p><a class="cart-shop-btn"
+                        href="/student/menu">Shop now</a>
+                </section>
+                <section id="cartContent" class="cart-content hidden">
+                    <div class="cart-grid">
+                        <section class="panel cart-items-panel">
+                            <div class="panel-head">
+                                <div>
+                                    <h3>Cart items</h3><small>Review quantity before checkout</small>
+                                </div><button class="outline" onclick="clearCart()">Clear cart</button>
+                            </div>
+                            <div id="cartItems"></div>
+                        </section>
+                        <aside class="panel cart-summary"><span class="badge">Order summary</span>
+                            <h3>Checkout</h3>
+                            <div class="summary-line"><span>Items</span><b id="cartItemCount">0</b></div>
+                            <div class="summary-line"><span>Subtotal</span><b id="cartSubtotal">₹0</b></div>
+                            <div class="summary-line total"><span>Total</span><b id="cartTotal">₹0</b></div><button
+                                class="primary wide" onclick="openDeliveryFromCart()">Proceed to Payment →</button>
+                            <p class="muted tiny">Select your delivery/pickup date and time on the next step.</p>
+                        </aside>
+                    </div>
+                </section>
+            </main>
+    </div>
+    <div id="deliveryModal" class="modal hidden">
+        <div class="modal-card delivery-card"><button class="close" onclick="hideDelivery()">×</button><span
+                class="badge purple">Choose delivery / pickup time</span>
+            <h3>When should your order be ready?</h3>
+            <p class="muted">Select a date and time slot before payment.</p>
+            <div class="form-grid"><label>Date<input id="deliveryDate" type="date"></label><label>Time slot<select
+                        id="deliveryTime">
+                        <option value="09:00 - 09:30">09:00 - 09:30</option>
+                        <option value="09:30 - 10:00">09:30 - 10:00</option>
+                        <option value="10:00 - 10:30">10:00 - 10:30</option>
+                        <option value="10:30 - 11:00">10:30 - 11:00</option>
+                        <option value="11:00 - 11:30">11:00 - 11:30</option>
+                        <option value="11:30 - 12:00">11:30 - 12:00</option>
+                        <option value="12:00 - 12:30">12:00 - 12:30</option>
+                        <option value="12:30 - 13:00">12:30 - 13:00</option>
+                        <option value="13:00 - 13:30">13:00 - 13:30</option>
+                        <option value="13:30 - 14:00">13:30 - 14:00</option>
+                        <option value="14:00 - 14:30">14:00 - 14:30</option>
+                        <option value="14:30 - 15:00">14:30 - 15:00</option>
+                        <option value="16:00 - 16:30">16:00 - 16:30</option>
+                        <option value="16:30 - 17:00">16:30 - 17:00</option>
+                        <option value="17:00 - 17:30">17:00 - 17:30</option>
+                    </select></label></div>
+            <div class="delivery-summary"><b id="deliverySummary">Select a slot</b><span id="deliveryError"
+                    class="error-text"></span></div><button class="primary wide" onclick="continueToPayment()">Continue
+                to Payment →</button>
+        </div>
+    </div>
+    <div id="toast"></div>
+    <script src="/js/student.js"></script>
+</body>
+
+</html>

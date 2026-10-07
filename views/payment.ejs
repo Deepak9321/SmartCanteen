@@ -1,0 +1,75 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Smart Canteen · Payment</title>
+    <link rel="stylesheet" href="/css/app.css">
+</head>
+
+<body>
+    <div class="layout">
+        <aside>
+            <div class="brand"><b>SC</b>
+                <div><strong>Smart Canteen</strong><small>Student Portal</small></div>
+            </div>
+            <nav><a href="/student/home">⌂ Home</a><a class="active" href="#">₹ Payment</a><a href="/student/orders">◷
+                    My Orders</a><a href="/student/cart">🛒 Cart</a></nav>
+            <div class="aside-bottom"><b>
+                    <%= user.name %>
+                </b><small>
+                    <%= user.studentId || 'Student' %>
+                </small><a href="/logout">↪ Logout</a></div>
+        </aside>
+        <main>
+            <header>
+                <div><small>Secure demo checkout</small>
+                    <h1>Complete your payment</h1>
+                </div><a class="outline" href="/student/menu">← Back to menu</a>
+            </header>
+            <div class="payment-layout">
+                <section class="panel"><span class="badge purple">Order #<%= order.token %></span>
+                    <h2 class="payment-title">Review order</h2>
+                    <div class="payment-items">
+                        <% order.items.forEach(i=>{ %><div class="payment-item"><span>
+                                    <%= i.name %> × <%= i.quantity %>
+                                </span><b>₹<%= i.price*i.quantity %></b></div>
+                            <% }) %>
+                    </div>
+                    <div class="payment-total"><span>Total payable</span><b>₹<%= order.total %></b></div>
+                    <div class="pickup-box"><b>Pickup</b><span>
+                            <%= order.pickupCounter %> · Token #<%= order.token %>
+                        </span></div>
+                    <div class="pickup-box"><b>Delivery / pickup time</b><span>🕒 <%= order.deliveryDate || 'Today' %> ·
+                                <%= order.deliveryTime || 'ASAP' %></span></div>
+                </section>
+                <section class="panel">
+                    <h3>Choose payment method</h3><small class="muted">This college-project checkout is a demo. No real
+                        money is charged.</small>
+                    <div class="payment-methods"><button class="pay-method active" data-method="UPI Demo"
+                            onclick="selectMethod(this)">📱<b>UPI</b><small>Demo payment</small></button><button
+                            class="pay-method" data-method="Card Demo"
+                            onclick="selectMethod(this)">💳<b>Card</b><small>Demo payment</small></button><button
+                            class="pay-method" data-method="Wallet Demo"
+                            onclick="selectMethod(this)">👛<b>Wallet</b><small>Demo payment</small></button></div>
+                    <button id="payBtn" class="primary wide pay-now" onclick="confirmPayment()">Confirm ₹<%= order.total
+                            %> & Generate QR</button>
+                    <p id="payMessage" class="muted payment-message"></p>
+                </section>
+            </div>
+        </main>
+    </div>
+    <div id="qrModal" class="modal hidden">
+        <div class="modal-card"><button class="close" onclick="hideQR()">×</button>
+            <h3>Pickup QR Generated</h3>
+            <p>Token #<%= order.token %> · <%= order.pickupCounter %>
+            </p><img id="qrImage">
+            <p class="muted">Show this QR to the canteen manager for pickup verification.</p><a class="primary"
+                href="/student/orders">Go to My Orders</a>
+        </div>
+    </div>
+    <script>let method = 'UPI Demo'; function selectMethod(el) { document.querySelectorAll('.pay-method').forEach(x => x.classList.remove('active')); el.classList.add('active'); method = el.dataset.method } async function confirmPayment() { const btn = document.getElementById('payBtn'); btn.disabled = true; btn.textContent = 'Processing…'; const r = await fetch('/api/orders/<%= order._id %>/pay', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ method }) }); const d = await r.json(); if (!r.ok) { document.getElementById('payMessage').textContent = d.error || 'Payment failed'; btn.disabled = false; btn.textContent = 'Try again'; return } document.getElementById('qrImage').src = d.qr; document.getElementById('qrModal').classList.remove('hidden'); } function hideQR() { document.getElementById('qrModal').classList.add('hidden'); location.href = '/student/orders' }</script>
+</body>
+
+</html>

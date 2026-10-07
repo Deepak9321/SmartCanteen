@@ -1,0 +1,47 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Smart Canteen · Sales</title>
+    <link rel="stylesheet" href="/css/app.css">
+</head>
+
+<body>
+    <div class="layout"><%- include('manager-nav',{user,active:'sales'}) %>
+            <main>
+                <header>
+                    <div><small>Manager console</small>
+                        <h1>Sales Analytics</h1>
+                    </div>
+                </header>
+                <section class="kpis">
+                    <div><small>Orders loaded</small><b>
+                            <%= orders.length %>
+                        </b></div>
+                    <div><small>Revenue in recent orders</small><b>₹<%= orders.reduce((s,o)=>
+                                s+(o.status==='Cancelled'?0:o.total),0).toLocaleString() %></b></div>
+                    <div><small>Feedback records</small><b>
+                            <%= feedbacks.length %>
+                        </b></div>
+                    <div><small>Waste records</small><b>
+                            <%= waste.length %>
+                        </b></div>
+                </section>
+                <section class="panel">
+                    <h3>Recent order feedback</h3>
+                    <div class="feedback-grid">
+                        <% feedbacks.forEach(f=>{ %><div class="quote"><b>
+                                    <%= '★' .repeat(f.rating) %>
+                                </b>
+                                <p>“<%= f.comment || 'No comment' %>”</p><small>Order feedback</small>
+                            </div>
+                            <% }) %>
+                    </div>
+                </section>
+            </main>
+    </div>
+</body>
+
+</html>

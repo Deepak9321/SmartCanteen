@@ -1,0 +1,261 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Smart Canteen · Manager</title>
+    <link rel="stylesheet" href="/css/app.css">
+</head>
+
+<body>
+    <div class="layout">
+        <aside>
+            <div class="brand"><b>SC</b>
+                <div><strong>Smart Canteen</strong><small>Manager Console</small></div>
+            </div>
+            <nav><a class="active" href="/manager">▣ Dashboard</a><a href="#orders">◷ Order management</a><a
+                    href="#inventory">☷ Menu & Inventory</a><a href="#ai">✦ AI Demand Overview</a><a href="#waste">◒
+                    Food-waste tracking</a><a href="#sales">▤ Sales analytics</a></nav>
+            <div class="aside-bottom"><b>
+                    <%= user?.name || 'Manager' %>
+                </b><small>Manager</small><a href="/student">← Student view</a><a href="/logout">↪ Logout</a></div>
+        </aside>
+        <main>
+            <header>
+                <div><small>Manager dashboard</small>
+                    <h1>Today's canteen overview</h1>
+                </div><button class="primary" onclick="refreshForecast()">✦ Refresh AI forecast</button>
+            </header>
+            <div class="kpis">
+                <div><small>Today's orders</small><b>
+                        <%= stats.orders %>
+                    </b><em>Live</em></div>
+                <div><small>Today's sales</small><b>₹<%= stats.revenue.toLocaleString() %></b><em>Paid orders</em></div>
+                <div><small>Prepared / Sold</small><b>
+                        <%= stats.prepared %> / <%= stats.sold %>
+                    </b><em>servings</em></div>
+                <div><small>Unsold / waste</small><b>
+                        <%= stats.unsold %> / <%= stats.wasteKg.toFixed(1) %> kg
+                    </b><em class="good">Track</em></div>
+            </div>
+            <section class="manager-hero" id="ai">
+                <div><span class="badge purple">✦ AI demand overview</span>
+                    <h2>Tomorrow's item-wise preparation plan</h2>
+                    <p>Historical sales + recent demand are used for transparent recommendations. Manager makes the
+                        final decision.</p>
+                </div>
+                <div class="confidence">Weighted 7-day model</div>
+            </section>
+            <div class="two">
+                <section class="panel">
+                    <div class="panel-head">
+                        <div>
+                            <h3>Historical sales & demand</h3><small>Popular item analysis + predicted quantity</small>
+                        </div>
+                    </div>
+                    <div class="forecast">
+                        <div class="frow head"><span>Item</span><span>7-day
+                                avg</span><span>Predicted</span><span>Prepare</span><span>Trend</span></div>
+                        <% forecast.forEach(f=>{const
+                            avg=(f.salesHistory||[]).length?Math.round(f.salesHistory.reduce((a,b)=>a+b,0)/f.salesHistory.length):0;%>
+                            <div class="frow"><span>
+                                    <%= f.emoji %>
+                                        <%= f.name %>
+                                </span><b>
+                                    <%= avg %>
+                                </b><strong>
+                                    <%= f.predicted %>
+                                </strong><strong>
+                                    <%= f.prepare %>
+                                </strong><span
+                                    class="tag <%= f.trend==='Rising'?'green':f.trend==='Falling'?'amber':'purple' %>">
+                                    <%= f.trend %>
+                                </span></div>
+                            <% }) %>
+                    </div>
+                    <div class="ai-note">✦ <b>AI recommendation:</b> Use predicted demand as a planning aid. Compare
+                        prepared vs sold vs unsold before deciding the final batch size.</div>
+                </section>
+                <section class="panel">
+                    <h3>Prepared vs Sold vs Unsold</h3><small>Latest waste records</small>
+                    <div class="comparison">
+                        <% waste.slice(0,6).forEach(w=>{ %><div class="comp-row">
+                                <div><b>
+                                        <%= w.foodName %>
+                                    </b><small>Prepared <%= w.prepared %> · Sold <%= w.sold %> · Unsold <%= w.unsold %>
+                                                    </small></div>
+                                <div class="meter"><i
+                                        style="width:<%= Math.min(100, w.prepared?Math.round(w.sold/w.prepared*100):0) %>%"></i>
+                                </div>
+                            </div>
+                            <% }) %>
+                    </div>
+                </section>
+            </div>
+            <section class="panel" id="scan">
+                <div class="panel-head">
+                    <div>
+                        <h3>📷 Scan student pickup QR</h3><small>Scan the QR shown after student payment to open the
+                            exact order details.</small>
+                    </div><button class="primary" onclick="startScanner()">Start scanner</button>
+                </div>
+                <div class="scanner-layout">
+                    <div>
+                        <div id="qr-reader" class="qr-reader"></div>
+                        <div class="scanner-actions"><button class="outline" onclick="stopScanner()">Stop
+                                scanner</button><label class="file-scan">Upload QR image<input id="qrFile" type="file"
+                                    accept="image/*" onchange="scanQRImage(this.files[0])"></label></div>
+                    </div>
+                    <div id="scanResult" class="scan-result">
+                        <div class="empty">No QR scanned yet.</div>
+                    </div>
+                </div>
+            </section>
+            <section class="panel" id="orders">
+                <div class="panel-head">
+                    <div>
+                        <h3>Order management</h3><small>Update order status for students</small>
+                    </div>
+                </div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Token</th>
+                            <th>Student</th>
+                            <th>Items</th>
+                            <th>Delivery time</th>
+                            <th>Total</th>
+                            <th>Status</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% orders.forEach(o=>{ %><tr>
+                                <td><b>#<%= o.token %></b></td>
+                                <td>
+                                    <%= o.studentName %>
+                                </td>
+                                <td>
+                                    <%= o.items.map(i=>i.name+' × '+i.quantity).join(', ') %>
+                                </td>
+                                <td>🕒 <%= o.deliveryDate || 'Today' %><br><small>
+                                            <%= o.deliveryTime || 'ASAP' %>
+                                        </small></td>
+                                <td>₹<%= o.total %>
+                                </td>
+                                <td><span
+                                        class="tag <%= o.status==='Ready'?'green':o.status==='Picked Up'?'purple':'amber' %>">
+                                        <%= o.status %>
+                                    </span></td>
+                                <td><select onchange="changeStatus('<%= o._id %>',this.value)">
+                                        <option value="">Change</option>
+                                        <option>Preparing</option>
+                                        <option>Ready</option>
+                                        <option>Picked Up</option>
+                                        <option>Cancelled</option>
+                                    </select></td>
+                            </tr>
+                            <% }) %>
+                    </tbody>
+                </table>
+            </section>
+            <section class="panel" id="inventory">
+                <div class="panel-head">
+                    <div>
+                        <h3>Menu & inventory management</h3><small>Add or update food and stock</small>
+                    </div>
+                </div>
+                <div class="inventory-grid">
+                    <% foods.forEach(f=>{ %><div class="inventory-card">
+                            <div class="food-img small">
+                                <%= f.emoji %>
+                            </div><b>
+                                <%= f.name %>
+                            </b><small>
+                                <%= f.category %> · ₹<%= f.price %>
+                            </small><label>Stock<input type="number" value="<%= f.stock %>"
+                                    id="stock-<%= f._id %>"></label><button class="outline"
+                                onclick="saveFood('<%= f._id %>','<%= f.name %>',<%= f.price %>,'<%= f.category %>',document.getElementById('stock-<%= f._id %>').value)">Save
+                                stock</button>
+                        </div>
+                        <% }) %>
+                </div>
+            </section>
+            <section class="panel" id="waste">
+                <div class="panel-head">
+                    <div>
+                        <h3>Food-waste tracking</h3><small>Record prepared, sold, unsold and waste kg</small>
+                    </div><button class="outline" onclick="toggleWaste()">+ Add waste record</button>
+                </div>
+                <div id="wasteForm" class="hidden form-grid"><input id="wFood" placeholder="Food name"><input
+                        id="wPrepared" type="number" placeholder="Prepared"><input id="wSold" type="number"
+                        placeholder="Sold"><input id="wUnsold" type="number" placeholder="Unsold"><input id="wKg"
+                        type="number" step="0.1" placeholder="Waste kg"><button class="primary"
+                        onclick="addWaste()">Save record</button></div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Item</th>
+                            <th>Prepared</th>
+                            <th>Sold</th>
+                            <th>Unsold</th>
+                            <th>Waste</th>
+                            <th>Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% waste.forEach(w=>{ %><tr>
+                                <td>
+                                    <%= w.foodName %>
+                                </td>
+                                <td>
+                                    <%= w.prepared %>
+                                </td>
+                                <td>
+                                    <%= w.sold %>
+                                </td>
+                                <td>
+                                    <%= w.unsold %>
+                                </td>
+                                <td>
+                                    <%= w.unsoldKg %> kg
+                                </td>
+                                <td>
+                                    <%= new Date(w.date).toLocaleDateString() %>
+                                </td>
+                            </tr>
+                            <% }) %>
+                    </tbody>
+                </table>
+            </section>
+            <section class="panel" id="sales">
+                <div class="panel-head">
+                    <div>
+                        <h3>Sales analytics</h3><small>Recent customer feedback</small>
+                    </div>
+                </div>
+                <div class="feedback-grid">
+                    <% feedbacks.forEach(f=>{ %><div class="quote"><b>
+                                <%= '★' .repeat(f.rating) %>
+                            </b>
+                            <p>“<%= f.comment || 'No comment' %>”</p><small>Order feedback</small>
+                        </div>
+                        <% }) %>
+                </div>
+            </section>
+            <section class="panel">
+                <h3>Database collections</h3>
+                <p class="muted">This project uses MongoDB collections instead of SQL tables.</p>
+                <div class="collection-chips">
+                    <span>users</span><span>foods</span><span>orders</span><span>payments</span><span>feedbacks</span><span>wastes</span><span>forecasts</span><span>inventories</span>
+                </div>
+            </section>
+        </main>
+    </div>
+    <div id="toast"></div>
+    <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+    <script src="/js/manager.js"></script>
+</body>
+
+</html>

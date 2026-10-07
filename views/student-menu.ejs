@@ -1,0 +1,103 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Smart Canteen · Menu</title>
+    <link rel="stylesheet" href="/css/app.css">
+</head>
+
+<body>
+    <div class="layout"><%- include('student-nav',{user,active:'menu'}) %>
+            <main>
+                <header class="menu-header">
+                    <div><span class="eyebrow">SMART CANTEEN · FRESH TODAY</span>
+                        <h1>What are you craving?</h1>
+                        <p class="header-sub">Order your favourites in a few taps. Fresh food, smart pickup.</p>
+                    </div>
+                    <div class="search search-premium">⌕ <input id="search" placeholder="Search dishes, drinks...">
+                    </div>
+                </header>
+                <section class="menu-hero">
+                    <div><span class="hero-pill">✨ Curated for campus</span>
+                        <h2>Good food. Less waiting.</h2>
+                        <p>Browse meals, snacks and beverages with real product photos.</p>
+                    </div>
+                    <div class="hero-orb">🍽️</div>
+                </section>
+                <section class="panel menu-panel">
+                    <div class="panel-head">
+                        <div>
+                            <h3>Explore the menu</h3><small>Tap a category or search to find your next meal</small>
+                        </div><span class="menu-count">
+                            <%= foods.length %> items
+                        </span>
+                    </div>
+                    <div class="filters"><button class="filter active"
+                            onclick="filterFood('all',this)">All</button><button class="filter"
+                            onclick="filterFood('Meals',this)">Meals</button><button class="filter"
+                            onclick="filterFood('Snacks',this)">Snacks</button><button class="filter"
+                            onclick="filterFood('Beverages',this)">Beverages</button><button class="filter"
+                            onclick="filterFood('Desserts',this)">Desserts</button></div>
+                    <div class="grid" id="foodGrid">
+                        <% foods.forEach(f=>{ %><article class="food" data-name="<%= f.name.toLowerCase() %>"
+                                data-category="<%= f.category %>">
+                                <div class="food-img"><span class="food-badge">
+                                        <%= f.category %>
+                                    </span><img src="<%= foodImagePath(f.name) %>" alt="<%= f.name %>"
+                                        loading="lazy" onerror="this.onerror=null;this.src='/images/food/default.svg';"><span class="food-emoji">
+                                        <%= f.emoji %>
+                                    </span></div>
+                                <div class="food-body">
+                                    <h4>
+                                        <%= f.name %>
+                                    </h4><small>
+                                        <%= f.category %> · <%= f.prepMinutes %> min
+                                    </small>
+                                    <p>
+                                        <%= f.description %>
+                                    </p>
+                                    <div class="food-buy"><b>₹<%= f.price %></b><span>Stock <%= f.stock %></span><button
+                                            onclick="add('<%= f._id %>','<%= f.name %>',<%= f.price %>,'<%= foodImagePath(f.name) %>')">+
+                                            Add</button></div>
+                                </div>
+                            </article>
+                            <% }) %>
+                    </div>
+                </section>
+            </main>
+    </div>
+    <div id="deliveryModal" class="modal hidden">
+        <div class="modal-card delivery-card"><button class="close" onclick="hideDelivery()">×</button><span
+                class="badge purple">Choose delivery / pickup time</span>
+            <h3>When should your order be ready?</h3>
+            <p class="muted">Select a date and time slot before payment.</p>
+            <div class="form-grid"><label>Date<input id="deliveryDate" type="date"></label><label>Time slot<select
+                        id="deliveryTime">
+                        <option value="09:00 - 09:30">09:00 - 09:30</option>
+                        <option value="09:30 - 10:00">09:30 - 10:00</option>
+                        <option value="10:00 - 10:30">10:00 - 10:30</option>
+                        <option value="10:30 - 11:00">10:30 - 11:00</option>
+                        <option value="11:00 - 11:30">11:00 - 11:30</option>
+                        <option value="11:30 - 12:00">11:30 - 12:00</option>
+                        <option value="12:00 - 12:30">12:00 - 12:30</option>
+                        <option value="12:30 - 13:00">12:30 - 13:00</option>
+                        <option value="13:00 - 13:30">13:00 - 13:30</option>
+                        <option value="13:30 - 14:00">13:30 - 14:00</option>
+                        <option value="14:00 - 14:30">14:00 - 14:30</option>
+                        <option value="14:30 - 15:00">14:30 - 15:00</option>
+                        <option value="16:00 - 16:30">16:00 - 16:30</option>
+                        <option value="16:30 - 17:00">16:30 - 17:00</option>
+                        <option value="17:00 - 17:30">17:00 - 17:30</option>
+                    </select></label></div>
+            <div class="delivery-summary"><b id="deliverySummary">Select a slot</b><span id="deliveryError"
+                    class="error-text"></span></div><button class="primary wide" onclick="continueToPayment()">Continue
+                to Payment →</button>
+        </div>
+    </div>
+    <div id="toast"></div>
+    <script src="/js/student.js"></script>
+</body>
+
+</html>
