@@ -2842,3 +2842,108 @@ select {
         font-size: 10px;
     }
 }
+
+
+/* Checkout and payment mobile reliability fixes */
+.payment-layout,
+.payment-layout > *,
+.payment-methods,
+.payment-item,
+.pickup-box,
+.cart-grid,
+.cart-summary,
+.delivery-card {
+    min-width: 0;
+    box-sizing: border-box;
+}
+.payment-layout {
+    width: 100%;
+}
+.payment-item > span,
+.pickup-box > span {
+    min-width: 0;
+    overflow-wrap: anywhere;
+}
+.pay-method,
+#payBtn,
+#deliveryModal .primary.wide {
+    touch-action: manipulation;
+}
+#payBtn:disabled,
+#deliveryModal .primary.wide:disabled {
+    opacity: .72;
+    cursor: wait;
+}
+.payment-message,
+#deliveryError {
+    overflow-wrap: anywhere;
+}
+.modal {
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+}
+.modal-open {
+    overflow: hidden;
+}
+@media (max-width: 760px) {
+    body:has(.payment-layout) {
+        padding-bottom: 86px;
+    }
+    .payment-layout {
+        grid-template-columns: minmax(0, 1fr) !important;
+        width: 100%;
+        max-width: 100%;
+        gap: 12px;
+    }
+    .payment-layout .panel {
+        width: 100%;
+        padding: 16px;
+        overflow-wrap: anywhere;
+    }
+    .payment-layout .payment-methods {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 7px;
+    }
+    .payment-layout .pay-method {
+        min-width: 0;
+        padding: 10px 6px;
+        text-align: center;
+        justify-items: center;
+        overflow-wrap: anywhere;
+    }
+    .payment-layout .pay-method small {
+        font-size: 10px;
+    }
+    .payment-layout .pay-now,
+    #deliveryModal .primary.wide {
+        width: 100%;
+        min-height: 48px;
+        white-space: normal;
+    }
+    .delivery-card {
+        max-height: calc(100dvh - 24px);
+        overflow-y: auto;
+        overscroll-behavior: contain;
+    }
+    #qrModal .modal-card {
+        margin: auto;
+    }
+}
+@media (max-width: 380px) {
+    .payment-layout .payment-methods {
+        grid-template-columns: 1fr;
+    }
+    .payment-layout .pay-method {
+        grid-template-columns: auto 1fr;
+        justify-items: start;
+        text-align: left;
+        align-items: center;
+        column-gap: 8px;
+    }
+    .payment-layout .pay-method small {
+        grid-column: 2;
+    }
+    .payment-layout .panel {
+        padding: 13px;
+    }
+}

@@ -28,7 +28,7 @@
                     <h1>Complete your payment</h1>
                 </div><a class="outline" href="/student/menu">← Back to menu</a>
             </header>
-            <div class="payment-layout">
+            <div class="payment-layout payment-layout-responsive">
                 <section class="panel"><span class="badge purple">Order #<%= order.token %></span>
                     <h2 class="payment-title">Review order</h2>
                     <div class="payment-items">
@@ -60,16 +60,58 @@
             </div>
         </main>
     </div>
-    <div id="qrModal" class="modal hidden">
+    <div id="qrModal" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="qrModalTitle">
         <div class="modal-card"><button class="close" onclick="hideQR()">×</button>
-            <h3>Pickup QR Generated</h3>
+            <h3 id="qrModalTitle">Pickup QR Generated</h3>
             <p>Token #<%= order.token %> · <%= order.pickupCounter %>
             </p><img id="qrImage">
             <p class="muted">Show this QR to the canteen manager for pickup verification.</p><a class="primary"
                 href="/student/orders">Go to My Orders</a>
         </div>
     </div>
-    <script>let method = 'UPI Demo'; function selectMethod(el) { document.querySelectorAll('.pay-method').forEach(x => x.classList.remove('active')); el.classList.add('active'); method = el.dataset.method } async function confirmPayment() { const btn = document.getElementById('payBtn'); btn.disabled = true; btn.textContent = 'Processing…'; const r = await fetch('/api/orders/<%= order._id %>/pay', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ method }) }); const d = await r.json(); if (!r.ok) { document.getElementById('payMessage').textContent = d.error || 'Payment failed'; btn.disabled = false; btn.textContent = 'Try again'; return } document.getElementById('qrImage').src = d.qr; document.getElementById('qrModal').classList.remove('hidden'); } function hideQR() { document.getElementById('qrModal').classList.add('hidden'); location.href = '/student/orders' }</script>
+    <script>
+        let method = 'UPI Demo';
+        function selectMethod(el) {
+            document.querySelectorAll('.pay-method').forEach(x => x.classList.remove('active'));
+            el.classList.add('active');
+            method = el.dataset.method;
+        }
+        async function confirmPayment() {
+            const btn = document.getElementById('payBtn');
+            const message = document.getElementById('payMessage');
+            if (btn.disabled) return;
+            btn.disabled = true;
+            btn.textContent = 'Processing payment…';
+            message.textContent = '';
+            try {
+                const response = await fetch('/api/orders/<%= order._id %>/pay', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+                    credentials: 'same-origin',
+                    body: JSON.stringify({ method })
+                });
+                const data = await response.json().catch(() => ({}));
+                if (!response.ok) {
+                    message.textContent = data.error || 'Payment could not be completed. Please try again.';
+                    btn.disabled = false;
+                    btn.textContent = 'Try payment again';
+                    return;
+                }
+                document.getElementById('qrImage').src = data.qr;
+                document.getElementById('qrModal').classList.remove('hidden');
+                document.body.classList.add('modal-open');
+            } catch (error) {
+                message.textContent = 'Connection problem. Check your internet and try again.';
+                btn.disabled = false;
+                btn.textContent = 'Try payment again';
+            }
+        }
+        function hideQR() {
+            document.getElementById('qrModal').classList.add('hidden');
+            document.body.classList.remove('modal-open');
+            location.href = '/student/orders';
+        }
+    </script>
 </body>
 
 </html>

@@ -30,7 +30,44 @@ function placeOrder() { if (!cart.length) return; const input = document.getElem
 function hideDelivery() { document.getElementById('deliveryModal')?.classList.add('hidden') }
 function updateDeliverySummary() { const d = document.getElementById('deliveryDate')?.value, t = document.getElementById('deliveryTime')?.value, s = document.getElementById('deliverySummary'); if (s) s.textContent = d && t ? ('Selected: ' + d + ' · ' + t) : 'Select a slot' }
 document.addEventListener('change', e => { if (e.target.id === 'deliveryDate' || e.target.id === 'deliveryTime') updateDeliverySummary() });
-async function continueToPayment() { if (!cart.length) return; const deliveryDate = document.getElementById('deliveryDate')?.value, deliveryTime = document.getElementById('deliveryTime')?.value, err = document.getElementById('deliveryError'); if (!deliveryDate || !deliveryTime) { if (err) err.textContent = 'Please select both date and time.'; return } const r = await fetch('/api/orders', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ items: cart, deliveryDate, deliveryTime }) }); const d = await r.json(); if (!r.ok) { if (err) err.textContent = d.error || 'Could not place order'; return } cart = []; saveCart(); location.href = d.paymentUrl }
+async function continueToPayment() {
+    if (!cart.length) { toast('Your cart is empty'); return; }
+    const deliveryDate = document.getElementById('deliveryDate')?.value;
+    const deliveryTime = document.getElementById('deliveryTime')?.value;
+    const err = document.getElementById('deliveryError');
+    const btn = document.querySelector('#deliveryModal .primary.wide');
+    if (!deliveryDate || !deliveryTime) {
+        if (err) err.textContent = 'Please select both date and time.';
+        return;
+    }
+    if (btn?.disabled) return;
+    if (err) err.textContent = '';
+    if (btn) { btn.disabled = true; btn.textContent = 'Processing order…'; }
+    try {
+        const response = await fetch('/api/orders', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+            credentials: 'same-origin',
+            body: JSON.stringify({ items: cart, deliveryDate, deliveryTime })
+        });
+        const data = await response.json().catch(() => ({}));
+        if (!response.ok) {
+            if (err) err.textContent = data.error || 'Could not place order. Please try again.';
+            return;
+        }
+        if (!data.paymentUrl) {
+            if (err) err.textContent = 'Order was created but payment link was not returned. Open My Orders and try again.';
+            return;
+        }
+        cart = [];
+        saveCart();
+        window.location.assign(data.paymentUrl);
+    } catch (error) {
+        if (err) err.textContent = 'Connection problem. Please check your internet and try again.';
+    } finally {
+        if (btn) { btn.disabled = false; btn.textContent = 'Continue to Payment →'; }
+    }
+}
 function payOrder(id) { location.href = '/payment/' + id }
 function showQR(src, title) { const img = document.getElementById('qrImage'); if (img) img.src = src; const q = document.getElementById('qrTitle'); if (q) q.textContent = title; document.getElementById('qrModal')?.classList.remove('hidden') }
 function hideQR() { document.getElementById('qrModal')?.classList.add('hidden') }
